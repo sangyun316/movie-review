@@ -1,0 +1,40 @@
+{% load staticfiles %}
+{% load range_maker %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Movie Reviews</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+  </head>
+  <body>
+    <header>
+      <p>Welcome {{request.session.user.first_name}}!</p>
+      <nav>
+        <a href="{% url 'reviews:new' %}">Add Movie and Review</a>
+        <a href="{% url 'users:logout' %}">Logout</a>
+      </nav>
+    </header>
+    <h1>Recent Movie Reviews:</h1>
+    <div class="recent">
+      {% for review in reviews %}
+        <div class="review">
+          <h4><a href="{% url 'reviews:show' id=review.movie.id %}">{{review.movie.title}}</a></h4>
+          <h5>Rating: </h5>
+          {% for i in review.rating|range_maker %}
+          <img class='star' src="{% static 'img/star.gif' %}" alt="star">
+          {% endfor %}
+          <p><a href="{% url 'reviews:show_user' id=review.user.id %}">{{review.user.first_name}}</a> says: {{review.review}}</p>
+          <p>Posted on {{review.created_at}}</p>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="all-movies">
+      <h3>Other Movies with Reviews:</h3>
+      {% for movie in movies %}
+        <p><a href="{% url 'reviews:show' id=movie.id %}">{{movie.title}}</a></p>
+      {% endfor %}
+    </div>
+  </body>
+</html>

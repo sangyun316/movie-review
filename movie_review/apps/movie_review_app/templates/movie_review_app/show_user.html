@@ -1,0 +1,26 @@
+{% load staticfiles %}
+{% load range_maker %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Movie Reviews</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="{% url 'reviews:index' %}">Home</a>
+        <a href="{% url 'reviews:new' %}">Add Movie and Review</a>
+        <a href="{% url 'users:logout' %}">Logout</a>
+      </nav>
+    </header>
+    <h1>User Name: {{user.first_name}} {{user.last_name}}</h1>
+    <h3>Email: {{user.email}}</h3>
+    <h3>Total Reviews: {{user.total_reviews}}</h3>
+    <h4>Posted Reviews on the following movies:</h4>
+    {% for review in user.review_set.all %}
+    <p><a href="{% url 'reviews:show' id=review.movie.id %}">{{review.movie.title}}</a></p>
+    {% endfor %}
+  </body>
+</html>

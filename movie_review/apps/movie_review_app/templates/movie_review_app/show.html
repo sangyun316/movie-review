@@ -1,0 +1,49 @@
+{% load staticfiles %}
+{% load range_maker %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Movie Review</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="{% url 'reviews:index' %}">Home</a>
+        <a href="{% url 'users:logout' %}">Logout</a>
+      </nav>
+    </header>
+    <h1>{{movie.title}}</h1>
+    <h3>Director: {{movie.director.name}}</h3>
+
+    <div class="recent">
+      {% for review in movie.review_set.all %}
+      <div class="review">
+        <h5>Rating</h5>
+        {% for i in review.rating|range_maker %}
+        <img class='star' src="{% static 'img/star.gif' %}" alt="star">
+        {% endfor %}
+        <p><a href="{% url 'reviews:show_user' id=review.user.id %}">{{review.user.first_name}}</a> says: {{review.review}}</p>
+        <p>Posted on {{review.created_at}}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="new-review">
+      <h3>Add a Review:</h3>
+      <form action="{% url 'reviews:create' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <textarea name="review" rows="8" cols="40"></textarea>
+        <p>Rating:</p>
+        <select name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <input type="submit" value="Submit Review">
+      </form>
+    </div>
+  </body>
+</html>
